@@ -140,9 +140,67 @@ public class App {
      */
     public static void reservarHabitacio() {
         System.out.println("\n===== RESERVAR HABITACIÓ =====");
-        //TODO:
-        
+
+    String tipus = seleccionarTipusHabitacioDisponible();
+    
+    if (tipus == null) {
+        return; // Si no hi ha habitacions, ixim de la funcio
     }
+    
+    ArrayList<String> serveis = seleccionarServeis();
+    
+    float preuTotal = calcularPreuTotal(tipus, serveis);
+    
+    System.out.println("\nCalculem el total...");
+    System.out.println("\nPreu habitació: " + preusHabitacions.get(tipus) + "€");
+    
+    if (serveis.size() > 0) {
+        System.out.print("\nServeis: ");
+        for (int i = 0; i < serveis.size(); i++) {
+            System.out.print(serveis.get(i) + " (" + preusServeis.get(serveis.get(i)) + "€)");
+            if (i < serveis.size() - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
+    }
+    
+    // Calculem subtotal i IVA
+    float preuHab = preusHabitacions.get(tipus);
+    float preuServ = 0;
+    for (int i = 0; i < serveis.size(); i++) {
+        preuServ += preusServeis.get(serveis.get(i));
+    }
+    float subtotal = preuHab + preuServ;
+    float iva = subtotal * IVA;
+    
+    System.out.println("\nSubtotal: " + subtotal + "€");
+    System.out.println("IVA (21%): " + iva + "€");
+    System.out.println("TOTAL: " + preuTotal + "€");
+    
+    // Generar codi de reserva
+    int codi = generarCodiReserva();
+    
+    // Guardar la reserva en el HashMap
+    ArrayList<String> dadesReserva = new ArrayList<String>();
+    dadesReserva.add(tipus); // posició 0: tipus d'habitacio 
+    dadesReserva.add(String.valueOf(preuTotal)); // Posició 1: preu total
+    
+    // Afegim els serveis
+    for (int i = 0; i < serveis.size(); i++) {
+        dadesReserva.add(serveis.get(i));
+    }
+    
+    reserves.put(codi, dadesReserva);
+    
+    // Actualitzar disponibilitat 
+    int disponibilitat = disponibilitatHabitacions.get(tipus);
+    disponibilitatHabitacions.put(tipus, disponibilitat - 1);
+    
+    System.out.println("\nReserva creada amb èxit!");
+    System.out.println("Codi de reserva: " + codi);
+}
+
 
     /**
      * Pregunta a l'usuari un tipus d'habitació en format numèric i
