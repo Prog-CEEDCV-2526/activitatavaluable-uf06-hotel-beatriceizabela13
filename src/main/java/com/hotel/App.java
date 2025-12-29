@@ -323,9 +323,14 @@ for (int i = 0; i < serveis.size(); i++) {
      * (entre 100 i 999) que no estiga repetit.
      */
     public static int generarCodiReserva() {
-        //TODO:
-        return 0;
-    }
+    int codi;
+    
+    do {
+        codi = random.nextInt(900) + 100;
+    } while (reserves.containsKey(codi));
+    
+    return codi;
+}
 
     /**
      * Permet alliberar una habitació utilitzant el codi de reserva
@@ -333,15 +338,41 @@ for (int i = 0; i < serveis.size(); i++) {
      */
     public static void alliberarHabitacio() {
         System.out.println("\n===== ALLIBERAR HABITACIÓ =====");
-         // TODO: Demanar codi, tornar habitació i eliminar reserva
+
+    int codi = llegirEnter("Introdueix el codi de reserva: ");
+    
+    if (reserves.containsKey(codi)) {
+        System.out.println("\nReserva trobada!");
+        
+        ArrayList<String> dadesReserva = reserves.get(codi);
+        String tipus = dadesReserva.get(0);
+        
+        int disponibilitat = disponibilitatHabitacions.get(tipus);
+        disponibilitatHabitacions.put(tipus, disponibilitat + 1);
+        
+        reserves.remove(codi);
+        
+        System.out.println("\nHabitació alliberada correctament.");
+        System.out.println("Disponibilitat actualitzada.");
+    } else {
+        System.out.println("\nNo s'ha trobat cap reserva amb aquest codi.");
     }
+}
+    
 
     /**
      * Mostra la disponibilitat actual de les habitacions (lliures i ocupades).
      */
     public static void consultarDisponibilitat() {
-        // TODO: Mostrar lliures i ocupades
-    }
+    System.out.println("\n===== DISPONIBILITAT D'HABITACIONS =====");
+    System.out.println("\nTipus    |   Lliures  | Ocupades");
+    System.out.println("---------|------------|------------");
+    
+    mostrarDisponibilitatTipus(TIPUS_ESTANDARD);
+    mostrarDisponibilitatTipus(TIPUS_SUITE);
+    mostrarDisponibilitatTipus(TIPUS_DELUXE);
+}
+    
 
     /**
      * Funció recursiva. Mostra les dades de totes les reserves
