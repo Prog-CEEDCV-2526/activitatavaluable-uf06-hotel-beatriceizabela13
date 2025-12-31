@@ -129,7 +129,7 @@ public class App {
         case 6:
             break;
         default:
-            System.out.println("Opció no vàlida. Torna a intentar-ho.");
+          System.out.println("Opció no vàlida. Intente de nou.");
             //D'aquesta manera l'usuari elegix una opció de les 6 i el mètode decidix quina funció seguir.
     }
     }
@@ -429,14 +429,55 @@ for (int i = 0; i < serveis.size(); i++) {
      */
     public static void obtindreReservaPerTipus() {
         System.out.println("\n===== CONSULTAR RESERVES PER TIPUS =====");
-        // TODO: Llistar reserves per tipus
+    
+    System.out.println("\nSeleccione tipus:");
+    System.out.println("1. Estàndard");
+    System.out.println("2. Suite");
+    System.out.println("3. Deluxe");
+    
+    String tipus = seleccionarTipusHabitacio();
+    
+    if (tipus == null) {
+        return;
+    }
+    
+    int[] codis = new int[reserves.size()];
+    int index = 0;
+    
+    for (Integer codi : reserves.keySet()) {
+        codis[index] = codi;
+        index++;
+    }
+    
+    System.out.println("\nReserves del tipus \"" + tipus + "\":");
+    
+    if (codis.length > 0) {
+        llistarReservesPerTipus(codis, tipus);
+    } else {
+        System.out.println("No hi ha reserves.");
+    }
+
     }
 
     /**
      * Consulta i mostra en detall la informació d'una reserva.
      */
     public static void mostrarDadesReserva(int codi) {
-       // TODO: Imprimir tota la informació d'una reserva
+    if (reserves.containsKey(codi)) {
+        ArrayList<String> dades = reserves.get(codi);
+        
+        System.out.println("\nCodi: " + codi);
+        System.out.println("- Tipus d'habitació: " + dades.get(0));
+        System.out.println("- Cost total: " + dades.get(1) + "€");
+        
+        if (dades.size() > 2) {
+            System.out.println("- Serveis:");
+            for (int i = 2; i < dades.size(); i++) {
+                System.out.println("   * " + dades.get(i));
+            }
+        }
+    }
+
     }
 
     // --------- MÈTODES AUXILIARS (PER MILLORAR LEGIBILITAT) ---------
