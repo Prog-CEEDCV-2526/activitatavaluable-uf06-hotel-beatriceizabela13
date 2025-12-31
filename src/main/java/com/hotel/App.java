@@ -379,15 +379,47 @@ for (int i = 0; i < serveis.size(); i++) {
      * associades a un tipus d'habitació.
      */
     public static void llistarReservesPerTipus(int[] codis, String tipus) {
-         // TODO: Implementar recursivitat
+    if (codis.length == 0) {
+        return;
     }
+    
+    int codiActual = codis[0];
+    
+    ArrayList<String> dades = reserves.get(codiActual);
+    if (dades.get(0).equals(tipus)) {
+        mostrarDadesReserva(codiActual);
+    }
+    
+    int[] newCodis = new int[codis.length - 1];
+    System.arraycopy(codis, 1, newCodis, 0, newCodis.length);
+    
+    llistarReservesPerTipus(newCodis, tipus);
+}
 
     /**
      * Permet consultar els detalls d'una reserva introduint el codi.
      */
     public static void obtindreReserva() {
         System.out.println("\n===== CONSULTAR RESERVA =====");
-        // TODO: Mostrar dades d'una reserva concreta
+    
+    int codi = llegirEnter("Introdueix el codi de reserva: ");
+    
+    if (reserves.containsKey(codi)) {
+        System.out.println("\nDades de la reserva:");
+        ArrayList<String> dades = reserves.get(codi);
+        System.out.println("- Tipus d'habitació: " + dades.get(0));
+        System.out.println("- Cost total: " + dades.get(1) + "€");
+        
+        if (dades.size() > 2) {
+            System.out.println("- Serveis addicionals:");
+            for (int i = 2; i < dades.size(); i++) {
+                System.out.println("   * " + dades.get(i));
+            }
+        }
+    } else {
+        System.out.println("\nNo s'ha trobat cap reserva amb aquest codi.");
+    }
+
  
     }
 
